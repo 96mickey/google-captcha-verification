@@ -1,0 +1,18 @@
+.main-profile-wrapper {
+    display: flex;
+    justify-content: space-around;
+}
+
+.profile-page-wrapper {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: space-between
+}
+
+.profile-item {
+    min-width: 350px;
+    display: flex;
+    justify-content: space-between;
+}

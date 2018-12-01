@@ -1,0 +1,149 @@
+.App {
+  text-align: center;
+  padding-left: 100px;
+  padding-right: 100px;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 40vmin;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.btnFacebook {
+  margin: 5px;
+  width: 165px;
+  height: 35px;
+  border-radius: 4px;
+  background: #3b5998;
+  color: white;
+  border: 0px transparent;
+  text-align: center;
+  display: inline-block;
+}
+
+.btnGoogle {
+  margin: 5px;
+  width: 165px;
+  height: 35px;
+  border-radius: 4px;
+  background: #db3236;
+  color: white;
+  border: 0px transparent;
+  text-align: center;
+}
+
+.btnFacebook:hover {
+  background: #3b5998;
+  opacity: 0.6;
+}
+
+.btnGoogle:hover {
+  background: #db3236;
+  opacity: 0.6;
+}
+
+@media only screen and (max-width: 399px) {
+  .btnFacebook, .btnGoogle {
+    width: 100%
+  }
+  .App {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  hr.style-eight {
+    display: none
+  }
+}
+
+.divider {
+  height: 20px;
+}
+
+.auth-form-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-around
+}
+
+.auth-form {
+  max-width: 500px;
+  min-width: 300px
+}
+
+hr.style-eight {
+  margin-left: -100px;
+  width: 100vw;
+  height: 12px;
+  border: 0;
+  box-shadow: inset 0 12px 12px -12px rgba(0, 0, 0, 0.5);
+}
+
+.form-input-field {
+  min-width: 250px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.submit-button-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-around
+}
+
+.submit-button {
+  padding: 5px 15px;
+  background: #ccc;
+  border: 0 none;
+  cursor: pointer;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  outline: none;
+  transition: 0.5s
+}
+
+.span-text {
+  color: blue;
+  cursor: pointer;
+}
+
+.submit-button:focus {
+  background: greenyellow;
+}
+
+.input {
+  max-width: 200px;
+  outline: none;
+  border: 0;
+  padding: 5px;
+  border-bottom: 1px solid #ccc;
+}
+
+.btnGoogle div:nth-child(1) {
+  padding: 0 10px !important;
+}
+
