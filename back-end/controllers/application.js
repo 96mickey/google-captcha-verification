@@ -165,9 +165,6 @@ const confirmProfile = function(req, res) {
 };
 
 const ipCount = function(req, res) {
-  console.log(req.connection.remoteAddress);
-  console.log(req.ip);
-  console.log(req.headers["x-forwarded-for"]);
   let xForwardedFor = (req.headers["x-forwarded-for"] || "").replace(
     /:\d+$/,
     ""
