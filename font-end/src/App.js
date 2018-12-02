@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import ProfilePage from "./components/profilePage/ProfilePage";
 import { PostData, GetData, DeleteData } from "./helpers/apicall";
-import "../node_modules/font-awesome/css/font-awesome.min.css";
 import "bulma/css/bulma.css";
 import Notification from "react-bulma-notification";
 import "react-bulma-notification/build/css/index.css";
 import "./App.css";
-import { loadReCaptcha } from 'react-recaptcha-google'
+import { loadReCaptcha } from "react-recaptcha-google";
 import ExampleComponent from "./components/exampleComponent/ExampleComponent";
 import Loader from "./components/loader/Loader";
 
@@ -20,7 +19,7 @@ class App extends Component {
       name: "",
       email: "",
       password: "",
-      ipcount: 0,
+      ipcount: 0
     };
   }
 
@@ -30,15 +29,19 @@ class App extends Component {
 
   login = e => {
     e.preventDefault();
-    this.setState({loaded: false})
+    this.setState({ loaded: false });
     PostData("login", this.state)
       .then(result => {
         if (result.status === "failure") {
-          this.setState({ loaded: true })
+          this.setState({ loaded: true });
           Notification.error(result.message);
         } else {
           localStorage.setItem("token", result.data.token);
-          this.setState({ authenticated: true, data: result.data.info, loaded: true });
+          this.setState({
+            authenticated: true,
+            data: result.data.info,
+            loaded: true
+          });
           Notification.success("Welcome");
         }
       })
@@ -47,15 +50,19 @@ class App extends Component {
 
   signup = e => {
     e.preventDefault();
-    this.setState({loaded: false})
+    this.setState({ loaded: false });
     PostData("register", this.state)
       .then(result => {
         if (result.status === "failure") {
-          this.setState({ loaded: true })
-          Notification.error(result.message);
+          this.setState({ loaded: true });
+          Notification.error("Please check all the fields.");
         } else {
           localStorage.setItem("token", result.data.token);
-          this.setState({ authenticated: true, data: result.data, loaded: true });
+          this.setState({
+            authenticated: true,
+            data: result.data,
+            loaded: true
+          });
           Notification.success("Welcome");
         }
       })
@@ -64,7 +71,7 @@ class App extends Component {
 
   logout = e => {
     e.preventDefault();
-    this.setState({loaded: false})
+    this.setState({ loaded: false });
     DeleteData("logout")
       .then(result => {
         if (result.status === "failure") {
@@ -82,15 +89,15 @@ class App extends Component {
             data: {}
           });
           Notification.success("You have successfully logged out.");
-          this.ipCount()
+          this.ipCount();
         }
       })
       .catch(error => Notification.error("Error! Please try again."));
   };
-  
-  captchaRes = (captcha) => {
-    this.setState({captcha})
-  }
+
+  captchaRes = captcha => {
+    this.setState({ captcha });
+  };
 
   signupForm = () => {
     this.setState({ authForm: "signup", name: "", email: "", password: "" });
@@ -99,41 +106,44 @@ class App extends Component {
   loginForm = () => {
     this.setState({ authForm: "login", name: "", email: "", password: "" });
   };
-  
+
   ipCount = () => {
     GetData("ip-count")
-        .then(result => {
-          if (result.status === "failure") {
-            this.setState({loaded: true})
-          } else {
-            this.setState({ ipcount: result.data, loaded: true });
-          }
-        })
-        .catch(err => { 
-          Notification.error("Error getting Ip count");
-          this.setState({loaded: true})
-          
-        });
-  }
+      .then(result => {
+        if (result.status === "failure") {
+          this.setState({ loaded: true });
+        } else {
+          this.setState({ ipcount: result.data, loaded: true });
+        }
+      })
+      .catch(err => {
+        Notification.error("Error getting Ip count");
+        this.setState({ loaded: true });
+      });
+  };
 
   componentDidMount = () => {
     loadReCaptcha();
     if (localStorage.token && localStorage.token !== "") {
-      this.setState({loaded: false})
+      this.setState({ loaded: false });
       GetData("confirm-profile")
         .then(result => {
           if (result.status === "failure") {
-            this.setState({loaded: true})
+            this.setState({ loaded: true });
             localStorage.clear();
           } else {
             localStorage.setItem("token", result.data.token);
-            this.setState({ authenticated: true, data: result.data, loaded: true });
+            this.setState({
+              authenticated: true,
+              data: result.data,
+              loaded: true
+            });
             Notification.success("Welcome");
           }
         })
         .catch();
     } else {
-      this.setState({loaded: false})
+      this.setState({ loaded: false });
       this.ipCount();
     }
   };
@@ -141,8 +151,8 @@ class App extends Component {
   render() {
     let { authenticated, data, loaded } = this.state;
     if (!loaded) {
-      return (<Loader />)
-    }else if (!authenticated) {
+      return <Loader />;
+    } else if (!authenticated) {
       return (
         <div className="App">
           <div className="auth-form-wrapper">
@@ -228,12 +238,14 @@ class App extends Component {
                     />
                   </div>
                   {this.state.ipcount >= 3 ? (
-                  <div>
-                    <ExampleComponent 
-                    captchaRes={(captcha) => this.captchaRes(captcha)}
-                    />
-                  </div>
-                  ) : ""}
+                    <div>
+                      <ExampleComponent
+                        captchaRes={captcha => this.captchaRes(captcha)}
+                      />
+                    </div>
+                  ) : (
+                    ""
+                  )}
                   <div className="form-input-field">
                     <div className="submit-button-wrapper">
                       <button type="submit" className="submit-button">
@@ -252,13 +264,7 @@ class App extends Component {
           </div>
         </div>
       );
-    } else
-      return (
-        <ProfilePage
-          logout={this.logout}
-          profileData={data}
-        />
-      );
+    } else return <ProfilePage logout={this.logout} profileData={data} />;
   }
 }
 

@@ -1,4 +1,4 @@
-let BaseUrl = "https://interview-tasks-personal-mickey96.c9users.io:8081/"
+let BaseUrl = "http://localhost:8081/";
 
 export function PostData(type, userData) {
   let token = localStorage.token;

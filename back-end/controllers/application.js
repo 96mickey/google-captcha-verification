@@ -2,8 +2,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const userDb = require("./../model/user");
-const moment = require('moment');
-const request = require('request');
+const moment = require("moment");
+const request = require("request");
 
 const register = function(req, res) {
   req.checkBody("name", "Enter a name").exists();
@@ -23,60 +23,73 @@ const register = function(req, res) {
       errors: errors
     });
   }
-  
-  let xForwardedFor = (req.headers['x-forwarded-for'] || '').replace(/:\d+$/, '');
+
+  let xForwardedFor = (req.headers["x-forwarded-for"] || "").replace(
+    /:\d+$/,
+    ""
+  );
   let ip = xForwardedFor || req.connection.remoteAddress;
-      
-  if (ip.includes('::ffff:')) {
-        ip = ip.split(':').reverse()[0];
-    }
-    
+
+  if (ip.includes("::ffff:")) {
+    ip = ip.split(":").reverse()[0];
+  }
+
   let startDate = moment(moment().date()._d).set({
-          hour: 0,
-          minute: 0,
-          second: 0
-        })
-  
+    hour: 0,
+    minute: 0,
+    second: 0
+  });
+
   let endDate = moment(moment().date()._d).set({
-          hour: 23,
-          minute: 59,
-          second: 59
-        })
-  
+    hour: 23,
+    minute: 59,
+    second: 59
+  });
+
   let user = new userDb();
   user.email = req.body.email.toString().trim();
   user.ip = ip;
   user.name = req.body.name.toString();
-  
-  userDb.find({ 
-    ip,
-    created: {
-      $gte: startDate,
-      $lt: endDate
-    }
-    }).exec((err, ipcount) => {
-    if(err) throw err;
-    else if(ipcount.length < 3) {
-      newUserRegister(req, res, user);
-    }else {
-      if(req.body.captcha === "" && req.body.captcha === null && req.body.captcha === undefined ) {
-        res.failure("You need to verify yourself.");
-      } else {
-        let secretKey = '6LeWOX4UAAAAABH2SBOlrkO10pshTok89Lq1KM0Z';
-        var verificationUrl = "https://www.google.com/recaptcha/api/siteverify?secret=" + secretKey + "&response=" + req.body.captcha + "&remoteip=" + req.connection.remoteAddress;
-        request(verificationUrl,function(error,response,body) {
-        body = JSON.parse(body);
-        if(body.success !== undefined && !body.success) {
-          return res.failure("Failed captcha verification");
-        }else {
-          newUserRegister(req, res, user);
-        }
-      });
-      }
-    }
-  });
 
-  
+  userDb
+    .find({
+      ip,
+      created: {
+        $gte: startDate,
+        $lt: endDate
+      }
+    })
+    .exec((err, ipcount) => {
+      if (err) throw err;
+      else if (ipcount.length < 3) {
+        newUserRegister(req, res, user);
+      } else {
+        if (
+          req.body.captcha === "" &&
+          req.body.captcha === null &&
+          req.body.captcha === undefined
+        ) {
+          res.failure("You need to verify yourself.");
+        } else {
+          let secretKey = "6LeWOX4UAAAAABH2SBOlrkO10pshTok89Lq1KM0Z";
+          var verificationUrl =
+            "https://www.google.com/recaptcha/api/siteverify?secret=" +
+            secretKey +
+            "&response=" +
+            req.body.captcha +
+            "&remoteip=" +
+            req.connection.remoteAddress;
+          request(verificationUrl, function(error, response, body) {
+            body = JSON.parse(body);
+            if (body.success !== undefined && !body.success) {
+              return res.failure("Failed captcha verification");
+            } else {
+              newUserRegister(req, res, user);
+            }
+          });
+        }
+      }
+    });
 };
 
 const login = function(req, res) {
@@ -152,38 +165,46 @@ const confirmProfile = function(req, res) {
 };
 
 const ipCount = function(req, res) {
-  let xForwardedFor = (req.headers['x-forwarded-for'] || '').replace(/:\d+$/, '');
+  console.log(req.connection.remoteAddress);
+  console.log(req.ip);
+  console.log(req.headers["x-forwarded-for"]);
+  let xForwardedFor = (req.headers["x-forwarded-for"] || "").replace(
+    /:\d+$/,
+    ""
+  );
   let ip = xForwardedFor || req.connection.remoteAddress;
-      
-  if (ip.includes('::ffff:')) {
-        ip = ip.split(':').reverse()[0]
-    }
-  
+
+  if (ip.includes("::ffff:")) {
+    ip = ip.split(":").reverse()[0];
+  }
+
   let startDate = moment(moment().date()._d).set({
-          hour: 0,
-          minute: 0,
-          second: 0
-        })
-  
+    hour: 0,
+    minute: 0,
+    second: 0
+  });
+
   let endDate = moment(moment().date()._d).set({
-          hour: 23,
-          minute: 59,
-          second: 59
-        })
-        
-  userDb.find({ 
-    ip,
-    created: {
-      $gte: startDate,
-      $lt: endDate
-    }
-  }).exec((err, data) => {
-    if(err) throw err;
-    else {
-      res.status(200).success(data.length, "This is you ip count.")
-    }
-  })
-}
+    hour: 23,
+    minute: 59,
+    second: 59
+  });
+
+  userDb
+    .find({
+      ip,
+      created: {
+        $gte: startDate,
+        $lt: endDate
+      }
+    })
+    .exec((err, data) => {
+      if (err) throw err;
+      else {
+        res.status(200).success(data.length, "This is you ip count.");
+      }
+    });
+};
 
 const logout = function(req, res) {
   req.checkHeaders("x-auth-token", "No token was found.").exists();
@@ -205,7 +226,6 @@ const logout = function(req, res) {
     }
   });
 };
-
 
 const deleteAccount = function(req, res) {
   req.checkHeaders("x-auth-token", "No token was found.").exists();
@@ -234,17 +254,20 @@ const newUserRegister = (req, res, user) => {
     if (err) throw err;
     else if (data) res.failure("There is already someone with this email.");
     else {
-      let xForwardedFor = (req.headers['x-forwarded-for'] || '').replace(/:\d+$/, '');
+      let xForwardedFor = (req.headers["x-forwarded-for"] || "").replace(
+        /:\d+$/,
+        ""
+      );
       let ip = xForwardedFor || req.connection.remoteAddress;
-      
-      if (ip.includes('::ffff:')) {
-            ip = ip.split(':').reverse()[0]
-        }
-      
+
+      if (ip.includes("::ffff:")) {
+        ip = ip.split(":").reverse()[0];
+      }
+
       const salt = bcrypt.genSaltSync(saltRounds);
       const hash = bcrypt.hashSync(req.body.password.toString(), salt);
       user.password = hash;
-      
+
       let token = jwt.sign(
         {
           email: user.email,
@@ -257,12 +280,12 @@ const newUserRegister = (req, res, user) => {
       res.status(200).success(user);
     }
   });
-}
+};
 
 module.exports = {
   login,
   register,
   confirmProfile,
   ipCount,
-  logout,
+  logout
 };
