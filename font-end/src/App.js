@@ -45,7 +45,10 @@ class App extends Component {
           Notification.success("Welcome");
         }
       })
-      .catch(error => Notification.error("Error! Please try again."));
+      .catch(error => {
+        this.setState({ loaded: true });
+        Notification.error("Error! Please try again.");
+      });
   };
 
   signup = e => {
@@ -66,7 +69,10 @@ class App extends Component {
           Notification.success("Welcome");
         }
       })
-      .catch(error => Notification.error("Error! Please try again."));
+      .catch(error => {
+        this.setState({ loaded: true });
+        Notification.error("Error! Please try again.");
+      });
   };
 
   logout = e => {
@@ -92,7 +98,10 @@ class App extends Component {
           this.ipCount();
         }
       })
-      .catch(error => Notification.error("Error! Please try again."));
+      .catch(error => {
+        this.setState({ loaded: true });
+        Notification.error("Error! Please try again.");
+      });
   };
 
   captchaRes = captcha => {
@@ -141,7 +150,11 @@ class App extends Component {
             Notification.success("Welcome");
           }
         })
-        .catch();
+        .catch(error => {
+          this.setState({ loaded: true });
+          localStorage.clear();
+          Notification.error("There is error fetching the data.");
+        });
     } else {
       this.setState({ loaded: false });
       this.ipCount();
